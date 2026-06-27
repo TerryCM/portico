@@ -8,6 +8,7 @@ struct PorticoApp: App {
     @StateObject private var store: MonitorStore
     // Disambiguate: SwiftUI also exports a `Settings` scene type.
     @StateObject private var settings: PorticoCore.Settings
+    @StateObject private var ports: PortsModel
     private let controller: TunnelController
 
     init() {
@@ -22,6 +23,12 @@ struct PorticoApp: App {
             .appendingPathComponent("Portico", isDirectory: true)
         let registry = LaunchRegistry(fileURL: appSupport.appendingPathComponent("registry.json"))
         self.controller = TunnelController(registry: registry)
+
+        let master = ControlMasterManager(controlDir: appSupport.appendingPathComponent("cm", isDirectory: true))
+        let forwarder = PortForwarder(master: master)
+        let forwardStore = ForwardStore(fileURL: appSupport.appendingPathComponent("forwards.json"))
+        let ports = PortsModel(store: forwardStore, forwarder: forwarder)
+        _ports = StateObject(wrappedValue: ports)
 
         let store = MonitorStore(
             scanner: scanner,
@@ -43,6 +50,7 @@ struct PorticoApp: App {
             MenuBarView(controller: controller)
                 .environmentObject(store)
                 .environmentObject(settings)
+                .environmentObject(ports)
         } label: {
             Image(systemName: menuBarSymbol(store.aggregate))
         }

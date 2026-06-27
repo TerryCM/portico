@@ -6,6 +6,7 @@ struct MenuBarView: View {
     @EnvironmentObject var store: MonitorStore
     // SwiftUI also exports a `Settings` scene type; bind the model explicitly.
     @EnvironmentObject var settings: PorticoCore.Settings
+    @EnvironmentObject var ports: PortsModel
     let controller: TunnelController
 
     var body: some View {
@@ -47,6 +48,9 @@ struct MenuBarView: View {
             }
 
             Divider()
+            PortsSection(ports: ports, catalog: store.catalog)
+
+            Divider()
             StartTunnelMenu(catalog: store.catalog) { host in startTunnel(host) }
             HStack {
                 Button("Refresh") { store.report(nil); Task { await store.refresh() } }
@@ -57,7 +61,7 @@ struct MenuBarView: View {
         }
         .padding(12)
         .frame(width: 340)
-        .task { store.start() }
+        .task { store.start(); await ports.refresh() }
     }
 
     // SettingsLink is macOS 14+, but the app targets macOS 13; fall back to the
