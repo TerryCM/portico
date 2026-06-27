@@ -1,0 +1,21 @@
+Sources/PorticoCore/Scanning/SSHConfigCatalog.swift
+  s_0c097b662b8979::t_05a531bd402005 1-69
+Tests/PorticoCoreTests/SSHConfigCatalogTests.swift
+  s_0c097b662b8979::t_417a102e8ec213 1-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "a65387028e71128cb0ea27598d83df325f6d6d0f",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
