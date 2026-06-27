@@ -1,0 +1,22 @@
+Sources/Portico/PorticoApp.swift
+  s_0c097b662b8979::t_157087d5cfefea 45
+Sources/PorticoCore/State/PortsModel.swift
+  s_0c097b662b8979::t_e1d148c4bcdc7b 26
+  s_0c097b662b8979::t_69e1d53b54d52b 40-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "0437800b15aa7054b3c31bc070d4ef5b0a930554",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
