@@ -101,16 +101,48 @@ private func tempDir() -> URL {
     #expect(ForwardStore(fileURL: url).all().map(\.id) == ["jump:7001"])
 }
 
-@MainActor @Test func portsModelAddRecordsAndProbes() async {
+@Test func forwardScannerDedupesByPortAndCapturesPID() {
+    let lsof = """
+    ssh   55985 terry 10u IPv4 0x0 0t0 TCP 127.0.0.1:8100 (LISTEN)
+    ssh   55985 terry 12u IPv6 0x0 0t0 TCP [::1]:8100 (LISTEN)
+    ssh   55985 terry 14u IPv4 0x0 0t0 TCP 127.0.0.1:3000 (LISTEN)
+    node  4242  terry  5u IPv4 0x0 0t0 TCP *:5173 (LISTEN)
+    ssh   55985 terry 16u IPv4 0x0 0t0 TCP 127.0.0.1:55012->1.2.3.4:22 (ESTABLISHED)
+    """
+    let found = ForwardScanner.parse(lsofOutput: lsof)
+    #expect(found.count == 2) // 8100 (deduped), 3000; node and ESTABLISHED excluded
+    #expect(found.contains { $0.localPort == 8100 && $0.pid == 55985 })
+    #expect(found.contains { $0.localPort == 3000 })
+    #expect(found.contains { $0.localPort == 5173 } == false)
+}
+
+@MainActor @Test func portsModelMergesDetectedAndManaged() async {
     let runner = FakeCommandRunner()
     runner.exitByExecutable["/usr/bin/ssh"] = 0
+    // lsof reports an external forward (8100, owned by a terry ssh pid 55985)
+    runner.stdoutByExecutable["/usr/sbin/lsof"] =
+        "ssh 55985 t 10u IPv4 0 0t0 TCP 127.0.0.1:8100 (LISTEN)\n"
+    // ps reports that pid 55985 is the terry session
+    runner.stdoutByExecutable["/bin/ps"] = "55985 1 10:00 ssh -o ControlMaster=yes terry\n"
     let mgr = ControlMasterManager(runner: runner, controlDir: tempDir())
     let forwarder = PortForwarder(runner: runner, master: mgr)
     let store = ForwardStore(fileURL: tempDir().appendingPathComponent("f.json"))
-    let model = PortsModel(store: store, forwarder: forwarder,
-                           probe: PortProbe(runner: runner, connectTimeout: 0.2))
-    let chosen = model.add(host: "terry", remoteHost: "localhost", remotePort: 3000, localPort: 7777)
+    let model = PortsModel(
+        store: store, forwarder: forwarder,
+        forwardScanner: ForwardScanner(runner: runner),
+        processScanner: ProcessScanner(runner: runner),
+        probe: PortProbe(runner: runner, connectTimeout: 0.2))
+
+    let chosen = model.add(host: "jump", remoteHost: "localhost", remotePort: 3000, localPort: 7777)
     #expect(chosen == 7777)
-    #expect(model.forwards.map(\.id) == ["terry:7777"])
-    #expect(model.lastError == nil)
+    await model.refresh()
+
+    // External forward shows, labeled by its owning session, not managed.
+    let external = model.activePorts.first { $0.localPort == 8100 }
+    #expect(external?.owner == "terry")
+    #expect(external?.managed == false)
+    // Managed forward shows even though lsof didn't report it (listener not up here).
+    let managed = model.activePorts.first { $0.localPort == 7777 }
+    #expect(managed?.managed == true)
+    #expect(managed?.owner == "jump")
 }

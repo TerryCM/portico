@@ -87,6 +87,9 @@ public struct ProcessScanner: Sendable {
         }
 
         guard let resolvedHost = host else { return nil }
+        // Warp's internal SSH proxy helpers connect to the literal
+        // "placeholder@placeholder" over an existing master — noise, not a session.
+        if resolvedHost == "placeholder" { return nil }
         return SSHSession(pid: pid, ppid: ppid, user: user, host: resolvedHost,
                           identityFile: identityFile, forwards: forwards,
                           controlPath: controlPath, elapsed: elapsed, rawArgs: tokens)

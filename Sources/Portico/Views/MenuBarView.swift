@@ -53,7 +53,7 @@ struct MenuBarView: View {
             Divider()
             StartTunnelMenu(catalog: store.catalog) { host in startTunnel(host) }
             HStack {
-                Button("Refresh") { store.report(nil); Task { await store.refresh() } }
+                Button("Refresh") { store.report(nil); Task { await store.refresh(); await ports.refresh() } }
                 Spacer()
                 settingsButton
                 Button("Quit") { NSApplication.shared.terminate(nil) }

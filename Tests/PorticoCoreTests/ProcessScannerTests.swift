@@ -62,6 +62,17 @@ private let psFixture = """
     #expect(s.host == "host")
 }
 
+@Test func skipsWarpPlaceholderHelperSessions() {
+    let ps = """
+      2600     1   53:27 ssh -q -o ControlPath=/tmp/x placeholder@placeholder ~/.warp/remote-server/proxy
+       701     1   01:00 ssh -L 5501:localhost:5501 terry@host
+    """
+    let sessions = ProcessScanner.parse(psOutput: ps)
+    #expect(sessions.contains { $0.host == "placeholder" } == false)
+    #expect(sessions.contains { $0.host == "host" })
+    #expect(sessions.count == 1)
+}
+
 @Test func scanRunsPSThroughRunner() throws {
     let fake = FakeCommandRunner()
     fake.stdoutByExecutable["/bin/ps"] = psFixture

@@ -18,26 +18,39 @@ struct PortsSection: View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Forwarded ports").font(.caption).foregroundStyle(.secondary)
 
-            if ports.forwards.isEmpty {
-                Text("None yet — add one below.")
+            if ports.activePorts.isEmpty {
+                Text("No active forwards.")
                     .font(.caption2).foregroundStyle(.tertiary)
             } else {
-                ForEach(ports.forwards) { f in
+                ScrollView {
+                  VStack(alignment: .leading, spacing: 2) {
+                    ForEach(ports.activePorts) { p in
                     HStack(spacing: 6) {
-                        Circle().fill(color(for: ports.health[f.id] ?? .unknown))
-                            .frame(width: 6, height: 6)
-                        Text("localhost:\(String(f.localPort)) → \(f.remoteHost):\(String(f.remotePort))")
-                            .font(.caption).lineLimit(1)
+                        Circle().fill(color(for: p.health)).frame(width: 6, height: 6)
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("localhost:\(String(p.localPort))").font(.caption).lineLimit(1)
+                            Text(p.remote.map { "\(p.owner) → \($0)" } ?? p.owner)
+                                .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                        }
                         Spacer(minLength: 4)
-                        Button { open(f) } label: { Image(systemName: "safari") }
-                            .help("Open in browser")
-                        Button { copy(f) } label: { Image(systemName: "doc.on.doc") }
-                            .help("Copy localhost:\(String(f.localPort))")
-                        Button { ports.remove(f) } label: { Image(systemName: "xmark.circle.fill") }
+                        if !p.managed {
+                            Text("ext").font(.caption2).foregroundStyle(.tertiary)
+                                .help("Forwarded by \(p.owner), outside Portico")
+                        }
+                        Button { open(p) } label: { Image(systemName: "safari") }
+                            .help("Open http://localhost:\(String(p.localPort))")
+                        Button { copy(p) } label: { Image(systemName: "doc.on.doc") }
+                            .help("Copy localhost:\(String(p.localPort))")
+                        Button { ports.remove(p) } label: { Image(systemName: "xmark.circle.fill") }
                             .help("Remove forward")
+                            .disabled(!p.managed)
+                            .opacity(p.managed ? 1 : 0.25)
                     }
                     .buttonStyle(.borderless)
+                    }
+                  }
                 }
+                .frame(maxHeight: 180)
             }
 
             if let err = ports.lastError {
@@ -84,13 +97,13 @@ struct PortsSection: View {
         remotePort = ""; localPort = ""
     }
 
-    private func open(_ f: ManagedForward) {
-        if let url = URL(string: f.localURL) { NSWorkspace.shared.open(url) }
+    private func open(_ p: ActivePort) {
+        if let url = URL(string: p.localURL) { NSWorkspace.shared.open(url) }
     }
 
-    private func copy(_ f: ManagedForward) {
+    private func copy(_ p: ActivePort) {
         NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString("localhost:\(String(f.localPort))", forType: .string)
+        NSPasteboard.general.setString("localhost:\(String(p.localPort))", forType: .string)
     }
 
     private func color(for h: ForwardHealth) -> Color {
