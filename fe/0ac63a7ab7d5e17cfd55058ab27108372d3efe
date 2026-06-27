@@ -1,0 +1,42 @@
+Sources/PorticoCore/Control/FreePort.swift
+  s_0c097b662b8979::t_262da3257651e8 1-34
+Sources/Portico/PorticoApp.swift
+  s_0c097b662b8979::t_2dec8e4b10174d 11
+  s_0c097b662b8979::t_88dc78c06667c9 53
+  s_0c097b662b8979::t_2b69815f8156dd 27-32
+Sources/PorticoCore/Control/ForwardStore.swift
+  s_0c097b662b8979::t_4c362296dfe45a 1-44
+Sources/PorticoCore/Control/PortForwarder.swift
+  s_0c097b662b8979::t_f4ddec7f701145 1-55
+Sources/PorticoCore/Control/ControlMasterManager.swift
+  s_0c097b662b8979::t_c8f5aa56089a29 1-68
+Sources/PorticoCore/State/PortsModel.swift
+  s_0c097b662b8979::t_c84bd4b10f5030 1-62
+Sources/PorticoCore/Models/ManagedForward.swift
+  s_0c097b662b8979::t_8fd0e7ca44018d 1-21
+Tests/PorticoCoreTests/PortForwardingTests.swift
+  s_0c097b662b8979::t_2c94fbc4ef16c3 1-116
+Sources/Portico/Views/PortsSection.swift
+  s_0c097b662b8979::t_6877359a249cdc 1-103
+Sources/Portico/Views/MenuBarView.swift
+  s_0c097b662b8979::t_5ac8e8b5a12c9b 64
+  s_0c097b662b8979::t_5dc4a3ec55b7a2 9
+  s_0c097b662b8979::t_f8574755a0a41e 51-52
+  s_0c097b662b8979::t_e3461d2ed16e30 50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "fe0ac63a7ab7d5e17cfd55058ab27108372d3efe",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
