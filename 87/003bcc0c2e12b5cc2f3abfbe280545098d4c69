@@ -1,0 +1,27 @@
+.gitignore
+  s_0c097b662b8979::t_ac4927b119b0e7 7
+Scripts/make-app.sh
+  s_0c097b662b8979::t_1dcde29c9680ad 1-35
+Sources/Portico/Views/MenuBarView.swift
+  s_0c097b662b8979::t_018829b0fd9729 1-25
+Sources/Portico/PorticoApp.swift
+  s_0c097b662b8979::t_267bc7e16ce30b 9-10,13
+  s_0c097b662b8979::t_8465d1714dbcd5 1-4,6-8,11-12,14-37,40-57
+  s_0c097b662b8979::t_a8fc3f46b02b09 38-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "87003bcc0c2e12b5cc2f3abfbe280545098d4c69",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
