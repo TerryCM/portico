@@ -1,0 +1,24 @@
+docs/superpowers/specs/2026-06-26-portico-design.md
+  s_0c097b662b8979::t_54d3b4305aa26a 52
+  s_0c097b662b8979::t_a681ee171f0826 102-107
+  s_0c097b662b8979::t_68e310147b2600 1-51,53-101,108-149,152-239
+  s_0c097b662b8979::t_5dc0b7f6579c2e 150-151
+.gitignore
+  s_0c097b662b8979::t_1d57d3dcec4834 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "662239b1eb01dccc613ecd5e4a95bf2c5fe17be8",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
