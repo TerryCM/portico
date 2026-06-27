@@ -42,7 +42,7 @@ struct PorticoApp: App {
         // Start polling at launch so the menu-bar icon reflects health before the
         // dropdown is first opened; MenuBarView's .task re-call is a no-op (start
         // calls stop first).
-        Task { @MainActor in store.start() }
+        Task { @MainActor in store.start(); ports.start() }
     }
 
     var body: some Scene {

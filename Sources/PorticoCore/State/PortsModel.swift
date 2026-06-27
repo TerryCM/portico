@@ -23,6 +23,7 @@ public final class PortsModel: ObservableObject {
     private let forwardScanner: ForwardScanner
     private let processScanner: ProcessScanner
     private let probe: PortProbe
+    private var timer: Timer?
 
     public init(store: ForwardStore,
                 forwarder: PortForwarder,
@@ -34,6 +35,19 @@ public final class PortsModel: ObservableObject {
         self.forwardScanner = forwardScanner
         self.processScanner = processScanner
         self.probe = probe
+    }
+
+    public func start(interval: TimeInterval = 4) {
+        stop()
+        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+            Task { @MainActor in await self?.refresh() }
+        }
+        Task { await refresh() }
+    }
+
+    public func stop() {
+        timer?.invalidate()
+        timer = nil
     }
 
     @discardableResult
