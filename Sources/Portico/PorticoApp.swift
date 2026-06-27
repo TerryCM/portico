@@ -27,7 +27,8 @@ struct PorticoApp: App {
         let master = ControlMasterManager(controlDir: appSupport.appendingPathComponent("cm", isDirectory: true))
         let forwarder = PortForwarder(master: master)
         let forwardStore = ForwardStore(fileURL: appSupport.appendingPathComponent("forwards.json"))
-        let ports = PortsModel(store: forwardStore, forwarder: forwarder)
+        let ports = PortsModel(store: forwardStore, forwarder: forwarder,
+                               catalogLoader: { catalog.load(path: configPath) })
         _ports = StateObject(wrappedValue: ports)
 
         let store = MonitorStore(

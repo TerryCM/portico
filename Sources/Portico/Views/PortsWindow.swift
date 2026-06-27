@@ -54,7 +54,12 @@ struct PortsWindow: View {
             }
             TableColumn("Owner") { p in Text(p.owner) }
             TableColumn("Remote") { p in
-                Text(p.remote ?? (p.managed ? "" : "external")).foregroundStyle(.secondary)
+                if let remote = p.remote {
+                    Text(remote).font(.body.monospaced()).foregroundStyle(.secondary)
+                } else {
+                    Text("unknown").foregroundStyle(.tertiary)
+                        .help("This forward wasn't created by Portico and its remote target isn't in ~/.ssh/config")
+                }
             }
             TableColumn("") { p in
                 HStack(spacing: 8) {
@@ -72,17 +77,43 @@ struct PortsWindow: View {
     }
 
     private var addForm: some View {
-        HStack(spacing: 8) {
-            Menu(host.isEmpty ? "Host…" : host) {
-                ForEach(store.catalog) { h in Button(h.alias) { host = h.alias } }
-            }.frame(width: 130)
-            TextField("remote host", text: $remoteHost).frame(width: 120)
-            TextField("remote port", text: $remotePort).frame(width: 90)
-            TextField("local (auto)", text: $localPort).frame(width: 90)
-            Button("Add forward") { submit() }
-                .disabled(host.isEmpty || Int(remotePort) == nil)
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Add a forward").font(.subheadline.bold())
+            HStack(alignment: .bottom, spacing: 8) {
+                field("1 · Host") {
+                    Menu(host.isEmpty ? "select…" : host) {
+                        ForEach(store.catalog) { h in Button(h.alias) { host = h.alias } }
+                    }.frame(width: 130)
+                }
+                arrow
+                field("2 · Remote (on that host)") {
+                    HStack(spacing: 4) {
+                        TextField("localhost", text: $remoteHost).frame(width: 110)
+                        Text(":").foregroundStyle(.secondary)
+                        TextField("port", text: $remotePort).frame(width: 70)
+                    }
+                }
+                arrow
+                field("3 · Local port") {
+                    TextField("auto", text: $localPort).frame(width: 80)
+                }
+                Button("Add forward") { submit() }
+                    .disabled(host.isEmpty || Int(remotePort) == nil)
+                    .padding(.bottom, 1)
+            }
         }
         .textFieldStyle(.roundedBorder)
+    }
+
+    private func field<Content: View>(_ label: String, @ViewBuilder _ content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label).font(.caption2).foregroundStyle(.secondary)
+            content()
+        }
+    }
+
+    private var arrow: some View {
+        Image(systemName: "arrow.right").foregroundStyle(.tertiary).padding(.bottom, 4)
     }
 
     private var sessionList: some View {

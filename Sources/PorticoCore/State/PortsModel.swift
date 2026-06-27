@@ -23,18 +23,21 @@ public final class PortsModel: ObservableObject {
     private let forwardScanner: ForwardScanner
     private let processScanner: ProcessScanner
     private let probe: PortProbe
+    private let catalogLoader: @Sendable () -> [HostEntry]
     private var timer: Timer?
 
     public init(store: ForwardStore,
                 forwarder: PortForwarder,
                 forwardScanner: ForwardScanner = ForwardScanner(),
                 processScanner: ProcessScanner = ProcessScanner(),
-                probe: PortProbe = PortProbe()) {
+                probe: PortProbe = PortProbe(),
+                catalogLoader: @escaping @Sendable () -> [HostEntry] = { [] }) {
         self.store = store
         self.forwarder = forwarder
         self.forwardScanner = forwardScanner
         self.processScanner = processScanner
         self.probe = probe
+        self.catalogLoader = catalogLoader
     }
 
     public func start(interval: TimeInterval = 4) {
@@ -77,10 +80,22 @@ public final class PortsModel: ObservableObject {
     public func refresh() async {
         let fs = forwardScanner
         let ps = processScanner
+        let loader = catalogLoader
         let detected = await Task.detached { fs.scan() }.value
         let sessions = await Task.detached { (try? ps.scan()) ?? [] }.value
+        let catalog = await Task.detached { loader() }.value
         var hostByPID: [Int32: String] = [:]
         for s in sessions { hostByPID[s.pid] = s.host }
+        // host alias -> (localBindPort -> "remoteHost:remotePort"), from ~/.ssh/config,
+        // so external (config-driven) forwards can show their remote side too.
+        var configRemote: [String: [Int: String]] = [:]
+        for h in catalog {
+            var byPort: [Int: String] = [:]
+            for f in h.forwards where f.kind == .local {
+                byPort[f.bindPort] = "\(f.targetHost ?? ""):\(f.targetPort ?? 0)"
+            }
+            configRemote[h.alias] = byPort
+        }
         let managed = store.all()
         var managedByPort: [Int: ManagedForward] = [:]
         for m in managed { managedByPort[m.localPort] = m }
@@ -102,10 +117,14 @@ public final class PortsModel: ObservableObject {
             } else {
                 owner = m?.host ?? "ssh"
             }
+            // Remote side: managed forwards know it directly; for external ones,
+            // recover it from the owning host's ssh config when available.
+            let remote = m.map { "\($0.remoteHost):\($0.remotePort)" }
+                ?? configRemote[owner]?[d.localPort]
             rows.append(ActivePort(
                 localPort: d.localPort, owner: owner, pid: d.pid,
                 managed: m != nil,
-                remote: m.map { "\($0.remoteHost):\($0.remotePort)" },
+                remote: remote,
                 health: (reachable[d.localPort] ?? false) ? .reachable : .listenerOnly))
         }
         // Managed forwards whose listener isn't up (just added, or dropped).

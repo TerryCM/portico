@@ -146,3 +146,27 @@ private func tempDir() -> URL {
     #expect(managed?.managed == true)
     #expect(managed?.owner == "jump")
 }
+
+@MainActor @Test func externalForwardRecoversRemoteFromConfig() async {
+    let runner = FakeCommandRunner()
+    runner.stdoutByExecutable["/usr/sbin/lsof"] =
+        "ssh 55985 t 10u IPv4 0 0t0 TCP 127.0.0.1:2024 (LISTEN)\n"
+    runner.stdoutByExecutable["/bin/ps"] = "55985 1 10:00 ssh terry\n"
+    let mgr = ControlMasterManager(runner: runner, controlDir: tempDir())
+    let forwarder = PortForwarder(runner: runner, master: mgr)
+    let store = ForwardStore(fileURL: tempDir().appendingPathComponent("f.json"))
+    let terry = HostEntry(alias: "terry", hostName: nil, user: nil,
+                          forwards: [Forward(kind: .local, bindAddress: nil, bindPort: 2024,
+                                             targetHost: "localhost", targetPort: 2024)])
+    let model = PortsModel(
+        store: store, forwarder: forwarder,
+        forwardScanner: ForwardScanner(runner: runner),
+        processScanner: ProcessScanner(runner: runner),
+        probe: PortProbe(runner: runner, connectTimeout: 0.2),
+        catalogLoader: { [terry] })
+    await model.refresh()
+    let row = model.activePorts.first { $0.localPort == 2024 }
+    #expect(row?.owner == "terry")
+    #expect(row?.managed == false)
+    #expect(row?.remote == "localhost:2024") // both sides, recovered from config
+}
