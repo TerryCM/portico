@@ -1,0 +1,21 @@
+Tests/PorticoCoreTests/PortProbeTests.swift
+  s_0c097b662b8979::t_dcede2c4c5b407 1-72
+Sources/PorticoCore/Scanning/PortProbe.swift
+  s_0c097b662b8979::t_5a199eca84f0bc 1-99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "6ecda609a2f84603cb2ca18fc06f2005a553dd98",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
