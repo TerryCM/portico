@@ -1,0 +1,35 @@
+Sources/Portico/Views/MenuBarView.swift
+  s_0c097b662b8979::t_8a9652e32c374d 56
+Sources/PorticoCore/Scanning/ProcessScanner.swift
+  s_0c097b662b8979::t_76456d574e463d 90-92
+Sources/Portico/Views/PortsSection.swift
+  s_0c097b662b8979::t_ca80262d9b5d33 100-101,104,106
+  s_0c097b662b8979::t_1f68a1a546d911 25-27
+  s_0c097b662b8979::t_121a61b31b92f4 21-22,29-34,36-44,46-47
+  s_0c097b662b8979::t_fc17781b944d81 50-51,53
+Sources/PorticoCore/State/PortsModel.swift
+  s_0c097b662b8979::t_8b357dab930615 3-15,18,23-24,27-31,34-35,55-59,68-95,97-101,103
+  s_0c097b662b8979::t_5e3360a88d5a34 64-67
+Tests/PorticoCoreTests/ProcessScannerTests.swift
+  s_0c097b662b8979::t_2d00c47e65ac0c 65-75
+Sources/PorticoCore/Scanning/ForwardScanner.swift
+  s_0c097b662b8979::t_5a74b7e460ade1 1-53
+Tests/PorticoCoreTests/PortForwardingTests.swift
+  s_0c097b662b8979::t_f2c0f3fffe82da 104-119,122-126,130-136,138-147
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "33dbf331340354017e98a7c1ef8fd7f199785ad4",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
