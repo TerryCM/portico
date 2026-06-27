@@ -1,0 +1,21 @@
+.gitignore
+  s_0c097b662b8979::t_0cf00648e32e8d 8
+Scripts/make-dmg.sh
+  s_0c097b662b8979::t_54f3e8ef6a3351 1-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "dc282838e157910f71a74a2444a73f8341188ffe",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
