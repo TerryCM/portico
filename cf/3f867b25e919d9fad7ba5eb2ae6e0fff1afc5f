@@ -1,0 +1,25 @@
+Tests/PorticoCoreTests/Fakes.swift
+  s_0c097b662b8979::t_e1ea8e26e6c27b 1-40
+Tests/PorticoCoreTests/SystemTests.swift
+  s_0c097b662b8979::t_c1413c5f2be336 1-36
+Sources/PorticoCore/System/CommandRunner.swift
+  s_0c097b662b8979::t_ee7212b871b742 1-36
+Sources/PorticoCore/System/ProcessSpawner.swift
+  s_0c097b662b8979::t_5dffc1b45801ad 1-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "cf3f867b25e919d9fad7ba5eb2ae6e0fff1afc5f",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
