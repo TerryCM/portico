@@ -1,0 +1,43 @@
+Scripts/make-app.sh
+  s_0c097b662b8979::t_eea826e6bfd0e5 1-35
+Sources/PorticoCore/Control/TunnelController.swift
+  s_925e59673d2832::t_083529ff5783b7 1-90
+Sources/PorticoCore/Scanning/ProcessScanner.swift
+  s_0c097b662b8979::t_1b370282eb0cfc 1-94
+Tests/PorticoCoreTests/SSHConfigCatalogTests.swift
+  s_4a0b612f071f38::t_53e2ba1d74e286 1-48
+Tests/PorticoCoreTests/SettingsTests.swift
+  s_925e59673d2832::t_2999aa8cb75fed 1-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "b05dadb7df117bccc1c4e8d02ec7db0167af1904",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    },
+    "s_4a0b612f071f38": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f7219c70-7ef4-4a58-b4c5-aacef7793589",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    },
+    "s_925e59673d2832": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9c6cc5e0-d4eb-45ca-ad9f-0621ab5ea4af",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
