@@ -1,0 +1,21 @@
+Sources/PorticoCore/Control/LaunchRegistry.swift
+  s_0c097b662b8979::t_a74846b6542119 1-57
+Tests/PorticoCoreTests/LaunchRegistryTests.swift
+  s_0c097b662b8979::t_fc88530987e238 1-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "9604ccb462a7908d7c9ccce8dff62046d598a1ea",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
