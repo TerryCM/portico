@@ -1,0 +1,26 @@
+Sources/Portico/Views/MenuBarView.swift
+  s_0c097b662b8979::t_00a076fe20c0e3 2,7-10,14-19,21,23-35,37-41,43,45-53,56,59-85
+Sources/Portico/Views/StartTunnelMenu.swift
+  s_0c097b662b8979::t_e4b471cc521cf4 1-21
+Sources/Portico/Views/SessionRow.swift
+  s_0c097b662b8979::t_56d0488a1d9367 1-59
+Sources/Portico/PorticoApp.swift
+  s_0c097b662b8979::t_307f3ddb100a14 43
+  s_0c097b662b8979::t_9232fdba9aa4be 11,19-25,34-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "f3c7e29538d4f950f5937a8a8a660e0d6f98a21a",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
