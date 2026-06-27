@@ -32,12 +32,18 @@ public struct TunnelController: Sendable {
     }
 
     public static func startArguments(host: HostEntry, forward: Forward?) -> [String] {
-        var args = ["-fN"]
+        // -N without -f: the spawned ssh IS the tunnel, so its pid is the one we
+        // track for kill/restart. (-f would daemonize and the parent we spawn
+        // would exit, leaving us holding a dead pid.) ExitOnForwardFailure=yes
+        // makes a port collision fail fast instead of lingering with no forwards.
+        var args = ["-N", "-o", "ExitOnForwardFailure=yes"]
         let forwards = forward.map { [$0] } ?? host.forwards
         for f in forwards { args.append(contentsOf: forwardFlag(f)) }
         args.append(host.alias)
         return args
     }
+
+    public func isAlive(_ pid: Int32) -> Bool { spawner.isAlive(pid: pid) }
 
     @discardableResult
     public func start(host: HostEntry, forward: Forward?) throws -> Int32 {

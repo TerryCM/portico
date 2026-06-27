@@ -48,9 +48,7 @@ struct MenuBarView: View {
             }
 
             Divider()
-            StartTunnelMenu(catalog: store.catalog) { host in
-                perform { _ = try controller.start(host: host, forward: nil) }
-            }
+            StartTunnelMenu(catalog: store.catalog) { host in startTunnel(host) }
             HStack {
                 Button("Refresh") { actionError = nil; Task { await store.refresh() } }
                 Spacer()
@@ -88,5 +86,25 @@ struct MenuBarView: View {
     private func perform(_ action: () throws -> Void) {
         do { try action(); actionError = nil; Task { await store.refresh() } }
         catch { actionError = String(describing: error) }
+    }
+
+    // Start, then check shortly after whether the tunnel survived. An ssh that
+    // can't bind its forwards (e.g. those ports are already served by another
+    // session) exits fast under ExitOnForwardFailure=yes — surface that instead
+    // of leaving the user with no feedback.
+    private func startTunnel(_ host: HostEntry) {
+        do {
+            let pid = try controller.start(host: host, forward: nil)
+            actionError = nil
+            Task {
+                try? await Task.sleep(for: .seconds(1.2))
+                if !controller.isAlive(pid) {
+                    actionError = "Couldn't start \(host.alias): tunnel exited immediately — its forward ports may already be in use."
+                }
+                await store.refresh()
+            }
+        } catch {
+            actionError = String(describing: error)
+        }
     }
 }

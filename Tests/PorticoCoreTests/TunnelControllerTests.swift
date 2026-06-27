@@ -12,7 +12,18 @@ private func tempReg() -> LaunchRegistry {
                          forwards: [Forward(kind: .local, bindAddress: nil, bindPort: 5501,
                                             targetHost: "localhost", targetPort: 5501)])
     let args = TunnelController.startArguments(host: host, forward: nil)
-    #expect(args == ["-fN", "-L", "5501:localhost:5501", "terry"])
+    #expect(args == ["-N", "-o", "ExitOnForwardFailure=yes", "-L", "5501:localhost:5501", "terry"])
+}
+
+@Test func startArgumentsAreTrackableAndFailFast() {
+    let host = HostEntry(alias: "terry", hostName: nil, user: nil, forwards: [])
+    let args = TunnelController.startArguments(host: host, forward: nil)
+    // No -f: the tunnel must be the spawned process so its pid is trackable.
+    #expect(args.contains("-f") == false)
+    #expect(args.contains("-fN") == false)
+    #expect(args.contains("-N"))
+    // Fail fast when a forward port is already bound instead of lingering.
+    #expect(args.contains("ExitOnForwardFailure=yes"))
 }
 
 @Test func startArgumentsWithSingleForward() {
@@ -20,7 +31,7 @@ private func tempReg() -> LaunchRegistry {
     let fwd = Forward(kind: .dynamic, bindAddress: nil, bindPort: 1080,
                       targetHost: nil, targetPort: nil)
     let args = TunnelController.startArguments(host: host, forward: fwd)
-    #expect(args == ["-fN", "-D", "1080", "jump"])
+    #expect(args == ["-N", "-o", "ExitOnForwardFailure=yes", "-D", "1080", "jump"])
 }
 
 @Test func startSpawnsSSHAndRecordsRegistry() throws {
@@ -31,8 +42,16 @@ private func tempReg() -> LaunchRegistry {
     let pid = try controller.start(host: host, forward: nil)
     #expect(spawner.spawned.count == 1)
     #expect(spawner.spawned[0].0 == "/usr/bin/ssh")
-    #expect(spawner.spawned[0].1 == ["-fN", "terry"])
-    #expect(reg.argv(forPID: pid)?.1 == ["-fN", "terry"])
+    #expect(spawner.spawned[0].1 == ["-N", "-o", "ExitOnForwardFailure=yes", "terry"])
+    #expect(reg.argv(forPID: pid)?.1 == ["-N", "-o", "ExitOnForwardFailure=yes", "terry"])
+}
+
+@Test func isAliveReflectsSpawnerState() {
+    let spawner = FakeProcessSpawner()
+    spawner.alivePIDs = [4242]
+    let controller = TunnelController(spawner: spawner, registry: tempReg())
+    #expect(controller.isAlive(4242) == true)
+    #expect(controller.isAlive(9999) == false)
 }
 
 @Test func killTerminatesAndDeregisters() throws {
@@ -123,5 +142,5 @@ private func tempReg() -> LaunchRegistry {
     #expect(TunnelController.forwardFlag(fwd) == ["-R", "127.0.0.1:9000:localhost:3000"])
     let host = HostEntry(alias: "build", hostName: nil, user: nil, forwards: [fwd])
     let args = TunnelController.startArguments(host: host, forward: nil)
-    #expect(args == ["-fN", "-R", "127.0.0.1:9000:localhost:3000", "build"])
+    #expect(args == ["-N", "-o", "ExitOnForwardFailure=yes", "-R", "127.0.0.1:9000:localhost:3000", "build"])
 }
