@@ -56,6 +56,14 @@ struct PorticoApp: App {
         }
         .menuBarExtraStyle(.window)
 
+        Window("Portico", id: "portico-main") {
+            PortsWindow()
+                .environmentObject(store)
+                .environmentObject(settings)
+                .environmentObject(ports)
+        }
+        .windowResizability(.contentMinSize)
+
         SwiftUI.Settings {
             SettingsView().environmentObject(settings)
         }

@@ -7,6 +7,7 @@ struct MenuBarView: View {
     // SwiftUI also exports a `Settings` scene type; bind the model explicitly.
     @EnvironmentObject var settings: PorticoCore.Settings
     @EnvironmentObject var ports: PortsModel
+    @Environment(\.openWindow) private var openWindow
     let controller: TunnelController
 
     var body: some View {
@@ -48,7 +49,14 @@ struct MenuBarView: View {
             }
 
             Divider()
-            PortsSection(ports: ports, catalog: store.catalog)
+            HStack {
+                Text(portsSummary).font(.caption).foregroundStyle(.secondary)
+                Spacer()
+                Button { openManager() } label: {
+                    Label("Manage…", systemImage: "macwindow")
+                }
+                .font(.caption)
+            }
 
             Divider()
             StartTunnelMenu(catalog: store.catalog) { host in startTunnel(host) }
@@ -75,6 +83,16 @@ struct MenuBarView: View {
                 NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
             }
         }
+    }
+
+    private var portsSummary: String {
+        let n = ports.activePorts.count
+        return n == 0 ? "No forwarded ports" : "\(n) forwarded port\(n == 1 ? "" : "s")"
+    }
+
+    private func openManager() {
+        NSApp.activate(ignoringOtherApps: true)
+        openWindow(id: "portico-main")
     }
 
     private var statusText: String {
