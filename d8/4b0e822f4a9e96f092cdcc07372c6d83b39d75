@@ -1,0 +1,22 @@
+Tests/PorticoCoreTests/ProcessScannerTests.swift
+  s_0c097b662b8979::t_ea75e2ce1e1b48 51-64
+Sources/PorticoCore/Scanning/ProcessScanner.swift
+  s_0c097b662b8979::t_39e644e3a0de84 17
+  s_0c097b662b8979::t_54c1e2bb7c274a 72-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "d84b0e822f4a9e96f092cdcc07372c6d83b39d75",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
