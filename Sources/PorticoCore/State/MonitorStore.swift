@@ -11,6 +11,9 @@ public final class MonitorStore: ObservableObject {
     @Published public private(set) var catalog: [HostEntry] = []
     @Published public private(set) var forwardHealth: [String: ForwardHealth] = [:]
     @Published public private(set) var lastError: String?
+    // Result of the last kill/restart/start. Lives here (not in the view) so it
+    // survives the menu-bar panel closing when an action is picked from a submenu.
+    @Published public private(set) var actionMessage: String?
 
     private let scanner: ProcessScanner
     private let probe: PortProbe
@@ -35,6 +38,8 @@ public final class MonitorStore: ObservableObject {
             }
             .store(in: &cancellables)
     }
+
+    public func report(_ message: String?) { actionMessage = message }
 
     public var aggregate: AggregateHealth {
         Self.aggregate(sessions: sessions, forwardHealth: forwardHealth)

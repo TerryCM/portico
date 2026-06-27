@@ -7,7 +7,6 @@ struct MenuBarView: View {
     // SwiftUI also exports a `Settings` scene type; bind the model explicitly.
     @EnvironmentObject var settings: PorticoCore.Settings
     let controller: TunnelController
-    @State private var actionError: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -37,8 +36,8 @@ struct MenuBarView: View {
                 .frame(maxHeight: 360)
             }
 
-            if let actionError {
-                Text(actionError).font(.caption).foregroundStyle(.red)
+            if let actionMessage = store.actionMessage {
+                Text(actionMessage).font(.caption).foregroundStyle(.orange)
             }
             if let scanError = store.lastError {
                 Text("Scan failed: \(scanError)")
@@ -50,7 +49,7 @@ struct MenuBarView: View {
             Divider()
             StartTunnelMenu(catalog: store.catalog) { host in startTunnel(host) }
             HStack {
-                Button("Refresh") { actionError = nil; Task { await store.refresh() } }
+                Button("Refresh") { store.report(nil); Task { await store.refresh() } }
                 Spacer()
                 settingsButton
                 Button("Quit") { NSApplication.shared.terminate(nil) }
@@ -84,27 +83,35 @@ struct MenuBarView: View {
     }
 
     private func perform(_ action: () throws -> Void) {
-        do { try action(); actionError = nil; Task { await store.refresh() } }
-        catch { actionError = String(describing: error) }
+        do { try action(); store.report(nil); Task { await store.refresh() } }
+        catch { store.report(String(describing: error)) }
     }
 
     // Start, then check shortly after whether the tunnel survived. An ssh that
     // can't bind its forwards (e.g. those ports are already served by another
-    // session) exits fast under ExitOnForwardFailure=yes — surface that instead
-    // of leaving the user with no feedback.
+    // session) exits fast under ExitOnForwardFailure=yes. Feedback goes to the
+    // store (survives the panel closing on submenu pick) and to a notification
+    // (visible even with the panel shut).
     private func startTunnel(_ host: HostEntry) {
         do {
             let pid = try controller.start(host: host, forward: nil)
-            actionError = nil
+            store.report("Starting \(host.alias)…")
             Task {
                 try? await Task.sleep(for: .seconds(1.2))
-                if !controller.isAlive(pid) {
-                    actionError = "Couldn't start \(host.alias): tunnel exited immediately — its forward ports may already be in use."
+                if controller.isAlive(pid) {
+                    store.report("Started \(host.alias).")
+                    Notifier.post("Portico", "Started tunnel: \(host.alias)")
+                } else {
+                    let msg = "Couldn’t start \(host.alias) — its forward ports are already in use (another session may already forward them)."
+                    store.report(msg)
+                    Notifier.post("Portico", msg)
                 }
                 await store.refresh()
             }
         } catch {
-            actionError = String(describing: error)
+            let msg = "Couldn’t start \(host.alias): \(error)"
+            store.report(msg)
+            Notifier.post("Portico", msg)
         }
     }
 }
