@@ -1,0 +1,19 @@
+docs/superpowers/plans/2026-06-27-portico.md
+  s_0c097b662b8979::t_a9372bf5d0a50e 1-2314
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "0b1b6c4994a10289c63a16f5c629b1c8fa10c2d5",
+  "prompts": {},
+  "sessions": {
+    "s_0c097b662b8979": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b9dc461-0869-48bd-a749-5c9640d4baf7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Terry Cruz Melo <terry@cruz.pe>"
+    }
+  }
+}
